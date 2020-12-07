@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>Result Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link href="{% static 'css/result.css' %}" rel="stylesheet" charset="utf-8">
+
+</head>
+
+<body onload="change_type();">
+    <h1>
+        Here is searching results ~
+    </h1>
+    <span hidden id="option_id">{{ request.session.option_id }}</span>
+
+    <select id="search_type" style="
+    font-size: 16px;
+    width: 102px;
+    height: 32px;
+    margin-right: 20px;
+    "> 
+        <option value="title">Title</option>
+        <option value="genre">Genre</option>
+        <option value="cast">Cast</option>
+        <option value="director">Director</option>
+        <option value="fullplot">Fullplot</option>
+        <option value="year">Year</option>
+    </select>
+
+    <form action="/index/result/" method="POST" class="search-box">
+        <input id="input2" hidden name="type_input" />
+        <input id="input3" hidden name="option_id" />
+        <input id="input1" class="search-input" type="text" name="user_input" onkeydown="EnterPress()" placeholder=" " />
+        <span></span>
+        <button hidden id="bt1" type="submit">bt1</button>
+    </form>
+
+    
+    <div class="result-container">
+        <div class="clearfix">
+            {% for result_movie in result_movies %}
+            <!-- <p>{{ result_movie.id }}</p> -->
+            <a href="{% url 'result_detail' pk=result_movie.id %}" class="movie-container">
+                <div class="poster-container" style="width: 240px; height: 400px;">
+                    <div class="image-container" width="200" height="300" style="
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    ">
+                        {% if result_movie.poster %}
+                        <img src="{{ result_movie.poster }}" width="200" height="300">
+                        {% else %}
+                        <img src="{% static 'images/not_found.jpg' %}" width="200" height="300">
+                        {% endif %}
+                    </div> 
+                    <div class="movie-title" style="margin-top: 10px;">
+                        {{ result_movie.title }}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <script src="{% static 'scripts/result.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>Details Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load static %}
+    <link href="{% static 'css/jquery.raty.css' %}" rel="stylesheet" charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/result_detail.css' %}" charset="utf-8">
+    
+    <script src="{% static 'scripts/jquery.js' %}"></script>
+    <script src="{% static 'scripts/jquery.raty.js' %}"></script>
+    <script src="{% static 'scripts/result_detail.js' %}"></script>
+</head>
+
+<body>
+    <div id="href_container" style="margin-top: 20px; padding-left: 900px;">
+        <a id="index" href="/index/" style="margin-right: 30px;">Index</a>
+        <a id="result" href="/index/result">Result</a>
+    </div>
+    
+
+    <div class="content" style="margin-top: 60px; margin-bottom: 80px;">
+        <h1>
+            <span class="title">{{ detail_movie.title }}</span>
+            <span class="year">({{ detail_movie.year }})</span>
+        </h1>
+        <div class="clearfix">
+            <div class="article">
+                <div class="indent clearfix">
+                    <div class="subjectwrap clearfix">
+                        <div class="subject clearfix">
+                            <div id="mainpic">
+                                {% if detail_movie.poster %}
+                                <a class="poster_link" href="{{ detail_movie.poster }}">
+                                    <img src="{{ detail_movie.poster }}">
+                                </a>
+                                {% else %}
+                                <a class="poster_link" href="javascript:void(0)">
+                                    <img src="{% static 'images/not_found.jpg' %}" >
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div id="info">
+                                <span>
+                                    <span class="pl">Director: </span>
+                                    {% for director in detail_movie.directors %}
+                                    <span class="attrs array">{{ director }}</span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Writer: </span>
+                                    {% for writer in detail_movie.writers %}
+                                    <span class="attrs array">{{ writer }}</span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Actor: </span>
+                                    {% for actor in detail_movie.cast %}
+                                    <span class="attrs array">{{ actor }}</span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Genre: </span>
+                                    {% for genre in detail_movie.genres %}
+                                    <span class="attrs array">{{ genre }}</span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Country: </span>
+                                    {% for country in detail_movie.countries %}
+                                    <span class="attrs array">{{ country }}   </span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Language: </span>
+                                    {% for language in detail_movie.languages %}
+                                    <span class="attrs array">{{ language }}   </span>
+                                    {% endfor %}
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Released date: </span>
+                                    <span class="attrs">{{ detail_movie.released }}</span>
+                                </span>
+                                <br>
+                                <span>
+                                    <span class="pl">Runtime: </span>
+                                    <span class="attrs">{{ detail_movie.runtime }}</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div id="rating_sectl">
+                            <div class="rating_wrap clearbox">
+                                <a class="btn btn-warning btn-lg imdb rating" target="_blank" data-toggle="tooltip" 
+                                data-placement="top" title="" href="javascript:void(0)">
+                                {{ detail_movie.imdb.rating }} 
+                                </a>
+                                <a class="btn btn-danger btn-lg tomatoes rating" target="_blank" data-toggle="tooltip" 
+                                data-placement="top" title="" href="javascript:void(0)">
+                                {{ detail_movie.tomatoes.viewer.rating }}
+                                </a>
+                                <a class="btn btn-success btn-lg douban rating" target="_blank" data-toggle="tooltip" 
+                                data-placement="top" title="" href="{{ detail_movie.Douban.doubanLink }}">
+                                {% if detail_movie.Douban == None or detail_movie.Douban.rating == -1 %}
+                                ?
+                                {% else %}
+                                {{ detail_movie.Douban.rating }}
+                                {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if request.session.is_login %}
+                    <div id="interest_sect" class="clearfix" style="margin-bottom: 40px; margin-top: 20px;">
+                        Rating: 
+                        <form id="form" action="{% url 'result_detail' pk=detail_movie_id %}" method="POST">
+                            <div id="star"></div>
+                            <input type="text" hidden id="rate_value" name="rate_value" />
+                            <button hidden id="bt1" type="submit">bt1</button>
+                        </form>
+                        <span id="current_rating" hidden>{{ rate_value }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="plot_info">
+                    <h2>
+                        {{ detail_movie.title }}'s plot · · · · · ·
+                    </h2>
+                    <div class="indent">
+                        <span property="v:summary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ detail_movie.plot }}</span>
+                    </div>
+                    <h2>
+                        {{ detail_movie.title }}'s fullplot · · · · · ·
+                    </h2>
+                    <div class="indent">
+                        <span property="v:summary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ detail_movie.fullplot }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+</body>
+</html>
